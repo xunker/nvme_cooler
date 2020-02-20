@@ -3,18 +3,19 @@
 /*
   Trinket 85: 0 => B,0
   Bluefruit LE Micro: 5 => C,6
+  Arduino Micro (Genuine) 6 => D,7
 */
 
 // Declare the LED protocol and the port
-// sk6812<C,6>  strip;
-// sk6812b<C,6>  strip;
-// ws2812<C,6>  strip;
-// ws2812b<C,6>  strip;
-// apa106<C,6>  strip;
-apa104<C,6>  strip;
+// sk6812<D,7>  strip;
+// sk6812b<D,7>  strip;
+// ws2812<D,7>  strip;
+ws2812b<D,7>  strip;
+// apa106<D,7>  strip;
+// apa104<D,7>  strip;
 
 // How many pixels to control
-const uint8_t numPixels = 4;
+const uint8_t numPixels = 6*3;
 
 // How bright the LEDs will be (max 255)
 const uint8_t maxBrightness = 63;
@@ -34,7 +35,7 @@ void updateColors(char r, char g, char b) {
 uint8_t currentPixel = FIRST_PIXEL;
 
 byte currentBrightness = 1;
-#define BRIGHT_INC 2
+#define BRIGHT_INC 3
 #define BRIGHT_DEC -1
 
 int8_t brightnessDirection = BRIGHT_INC;
@@ -45,7 +46,7 @@ int8_t pixelDirection[numPixels] = {};
 #define FADE_EVERY 25 // ms
 unsigned long nextFade = FADE_EVERY;
 
-#define MOVE_EVERY 1000 // ms
+#define MOVE_EVERY 1000/(numPixels/3) // ms
 unsigned long nextMove = MOVE_EVERY;
 
 void setup() {
@@ -72,7 +73,9 @@ void chaseFade() {
 
       pixelBrightness[i] = pixelBrightness[i] + pixelDirection[i];
 
-      pixels[i].g = pixelBrightness[i];
+      // pixels[i].r = pixelBrightness[i];
+      // pixels[i].g = pixelBrightness[i];
+      pixels[i].b = pixelBrightness[i];
 
       strip.sendPixels(numPixels, pixels);
 
